@@ -26,24 +26,6 @@ namespace PokeMyck.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> PokemonList(int pagina = 1)
-        //{
-        //    const int pokemonesPorPagina = 20;
-        //    pagina = Math.Max(1, pagina);
-        //    var offset = (pagina - 1) * pokemonesPorPagina;
-        //    var (pokemones, totalPokemones) = await _pokeApiService.GetPokemonList(pokemonesPorPagina, offset);
-
-        //    var _pokemon = new PokemonListPagination
-        //    {
-        //        Pokemones = pokemones,
-        //        PaginaActual = pagina,
-        //        PokemonesPorPagina = pokemonesPorPagina,
-        //        TotalPokemones = totalPokemones
-        //    };
-        //    return View(_pokemon);
-        //}
-
         [HttpGet]
         public async Task<IActionResult> PokemonList(
     int pagina = 1,
