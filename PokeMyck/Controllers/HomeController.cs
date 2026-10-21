@@ -31,21 +31,62 @@ namespace PokeMyck.Controllers
         //Get the list of pokemons with pagination
 
         [HttpGet]
-        public async Task<IActionResult> PokemonList(int pagina = 1)
+        public async Task<IActionResult> PokemonList(
+    int pagina = 1,
+    string? NombreBuscado = null,
+    string? EspecieSeleccionada = null)
         {
             const int pokemonesPorPagina = 20;
+
             pagina = Math.Max(1, pagina);
-            var offset = (pagina - 1) * pokemonesPorPagina;
-            var (pokemones, totalPokemones) = await _pokeApiService.GetPokemonList(pokemonesPorPagina, offset);
-            
-            var _pokemon = new PokemonListPagination
+
+            var (pokemones, _) = await _pokeApiService.GetPokemonList(
+                limit: 2000,
+                offset: 0);
+
+            var especies = await _pokeApiService.GetSpeciesList();
+
+            if (!string.IsNullOrWhiteSpace(NombreBuscado))
             {
-                Pokemones = pokemones,
+                pokemones = pokemones
+                    .Where(p => p.Name.Contains(
+                        NombreBuscado.Trim(),
+                        StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(EspecieSeleccionada))
+            {
+                var nombresEspecie =
+                    await _pokeApiService.GetPokemonNamesBySpecies(
+                        EspecieSeleccionada);
+
+                pokemones = pokemones
+                    .Where(p => nombresEspecie.Contains(
+                        p.Name,
+                        StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            var totalPokemones = pokemones.Count;
+
+            var pokemonesPagina = pokemones
+                .Skip((pagina - 1) * pokemonesPorPagina)
+                .Take(pokemonesPorPagina)
+                .ToList();
+
+            var modelo = new PokemonListPagination
+            {
+                Pokemones = pokemonesPagina,
                 PaginaActual = pagina,
                 PokemonesPorPagina = pokemonesPorPagina,
-                TotalPokemones = totalPokemones
+                TotalPokemones = totalPokemones,
+                NombreBuscado = NombreBuscado,
+                EspecieSeleccionada = EspecieSeleccionada,
+                Especies = especies
             };
-            return View(_pokemon);
+
+            return View(modelo);
         }
 
         // Get the details of a specific pokemon by name

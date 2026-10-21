@@ -85,6 +85,54 @@ namespace PokeMyck.Services
             };
         }
 
+        public async Task<List<EspeciesPokemon>> GetSpeciesList()
+        {
+            var respuesta = await _httpClient.GetFromJsonAsync<PokeApiGeneral>(
+                "pokemon-species/?limit=2000");
+
+            if (respuesta is null)
+            {
+                throw new HttpRequestException(
+                    "Expecies not found.");
+            }
+
+            return respuesta.Results.Select(especie => new EspeciesPokemon
+            {
+                Name = especie.Name,
+                Url = especie.Url
+            }).ToList();
+        }
+
+        public async Task<List<string>> GetPokemonNamesBySpecies(string especie)
+        {
+            using var respuesta = await _httpClient.GetAsync(
+                $"pokemon-species/{Uri.EscapeDataString(especie.Trim().ToLower())}");
+
+            respuesta.EnsureSuccessStatusCode();
+
+            using var documento = await respuesta.Content.ReadAsStreamAsync();
+            using var json = await System.Text.Json.JsonDocument.ParseAsync(documento);
+
+            var raiz = json.RootElement;
+
+            if (!raiz.TryGetProperty("varieties", out var variedades))
+            {
+                throw new HttpRequestException(
+                    $"Variations not found for species '{especie}'.");
+            }
+
+            var nombres = variedades
+                .EnumerateArray()
+                .Select(item => item.GetProperty("pokemon")
+                    .GetProperty("name").GetString())
+                .Where(nombre => nombre != null)
+                .Select(nombre => nombre!)
+                .ToList();
+
+            return nombres;
+        }
+
+
         // obtain the image URL for a Pokemon based on its API URL
         private static string GetImageUrl(string pokemonUrl)
         {

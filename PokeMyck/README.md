@@ -13,6 +13,9 @@ The app apply the pagination based on the number of Pokemon available, and it wi
 current page = total number of Pokemon / 20, rounded up to the nearest whole number.
 The app receive the page number as a parameter in the URL, and it will show the corresponding page of Pokemon.
 You can also navigate to the next and previous pages using the buttons provided.
+This function was implemented by this way because the PokeAPI does not provide a way to get a total number of page, and it is not efficient to get all Pokemon 
+at once because it would take a long time to load the page. So for this reason, the app get the total number of Pokemon, calculated the number of page and 
+apply the pagination based on the limit of pokemon per page.
 
 
 Download pokemon list
@@ -25,3 +28,5 @@ If you want to send the list of Pokemon by email, you can need configure the ema
 You need to set the following parameters:
 EmailFrom: The email address from which the email will be sent.
 AppPassword: The password for the email account.
+
+
