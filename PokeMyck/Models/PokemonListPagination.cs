@@ -10,12 +10,6 @@
 
         public int TotalPokemones { get; set; }
 
-        public string? NombreBuscado { get; set; }
-
-        public string? EspecieSeleccionada { get; set; }
-
-        public List<EspeciesPokemon> Especies { get; set; } = new();
-
         public int TotalPaginas =>
             PokemonesPorPagina > 0
                 ? (int)Math.Ceiling(
