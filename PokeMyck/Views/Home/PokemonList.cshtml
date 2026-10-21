@@ -2,6 +2,63 @@
 
 <h1>Pokémon</h1>
 
+<form asp-controller="Home"
+      asp-action="DescargarPokemon"
+      method="post">
+
+    @foreach (var pokemon in Model.Pokemones)
+    {
+        <input type="hidden"
+               name="pokemones.Index"
+               value="@pokemon.Name" />
+
+        <input type="hidden"
+               name="pokemones[@pokemon.Name].Name"
+               value="@pokemon.Name" />
+
+        <input type="hidden"
+               name="pokemones[@pokemon.Name].ImageUrl"
+               value="@pokemon.ImageUrl" />
+    }
+
+    <button type="submit">Descargar Excel</button>
+</form>
+
+<form asp-controller="Home"
+      asp-action="SendByEmail"
+      method="post">
+
+    <label for="correoDestino">Correo destinatario:</label>
+    <input type="email"
+           id="correoDestino"
+           name="correoDestino"
+           required />
+
+    @foreach (var pokemon in Model.Pokemones)
+    {
+        <input type="hidden"
+               name="pokemones.Index"
+               value="@pokemon.Name" />
+
+        <input type="hidden"
+               name="pokemones[@pokemon.Name].Name"
+               value="@pokemon.Name" />
+
+        <input type="hidden"
+               name="pokemones[@pokemon.Name].ImageUrl"
+               value="@pokemon.ImageUrl" />
+    }
+
+    <button type="submit">Enviar por correo</button>
+</form>
+
+@if (TempData["Error"] != null)
+{
+    <p style="
+    color: red;
+">@TempData["Error"]</p>
+}
+
 <p>
     Página @Model.PaginaActual de @Model.TotalPaginas
     — Total de Pokémon: @Model.TotalPokemones
