@@ -1,16 +1,62 @@
-﻿@model List<PokeMyck.Models.Pokemon>
+﻿@model PokeMyck.Models.PokemonListPagination
 
-<h1>Pokémon obtenidos: @Model.Count</h1>
+<h1>Pokémon</h1>
+
+<p>
+    Página @Model.PaginaActual de @Model.TotalPaginas
+    — Total de Pokémon: @Model.TotalPokemones
+</p>
 
 <div>
-    @foreach (var pokemon in Model)
+    @foreach (var pokemon in Model.Pokemones)
     {
         <div style="display: inline-block; margin: 15px; text-align: center;">
             <img src="@pokemon.ImageUrl"
                  alt="@pokemon.Name"
                  width="120" />
 
-            <p>@pokemon.Name</p>
+            <h3>@pokemon.Name</h3>
         </div>
     }
 </div>
+
+<nav aria-label="Paginación">
+    @if (Model.PaginaActual > 1)
+    {
+        <a asp-action="PokemonList"
+           asp-route-pagina="@(Model.PaginaActual - 1)">
+            Anterior
+        </a>
+    }
+
+    |
+
+    @if (Model.PaginaActual < Model.TotalPaginas)
+    {
+        <a asp-action="PokemonList"
+           asp-route-pagina="@(Model.PaginaActual + 1)">
+            Siguiente
+        </a>
+    }
+    <br />
+    @for (int i = 1; i <= Model.TotalPaginas; i++)
+    {
+        if (i == Model.PaginaActual)
+        {
+            <span aria-current="page">@i</span>
+        }
+        else
+        {
+            if (i == 1 || i == Model.TotalPaginas || (i >= Model.PaginaActual - 5 && i <= Model.PaginaActual + 5))
+            {
+                <a asp-action="PokemonList"
+                asp-route-pagina="@i">
+                    @i
+                </a>
+            } else if (i == Model.PaginaActual - 5 || i == Model.PaginaActual + 5)
+            {
+                <span>...</span>
+            }
+        }
+    }
+</nav>

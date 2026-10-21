@@ -12,7 +12,7 @@ namespace PokeMyck.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<Pokemon>> GetPokemonList(
+        public async Task<(List<Pokemon> Pokemones, int TotalPokemones)> GetPokemonList(
             int limit = 20,
             int offset = 0)
         {
@@ -32,12 +32,18 @@ namespace PokeMyck.Services
                     "No results found.");
             }
 
-            return pokeApiResponse.Results.Select(pokemon => new Pokemon
-            {
-                Name = pokemon.Name,
-                Url = pokemon.Url,
-                ImageUrl = GetImageUrl(pokemon.Url)
+            var pokemones = pokeApiResponse.Results.Select(pokemon => {
+                var id = pokemon.Url.TrimEnd('/').Split('/').Last();
+
+                return new Pokemon
+                {
+                    Name = pokemon.Name,
+                    Url = pokemon.Url,
+                    ImageUrl = GetImageUrl(pokemon.Url)
+                };
             }).ToList();
+
+            return (pokemones, pokeApiResponse.Count);
         }
 
         private static string GetImageUrl(string pokemonUrl)
