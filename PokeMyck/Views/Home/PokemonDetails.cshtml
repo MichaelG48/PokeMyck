@@ -1,0 +1,26 @@
+﻿@model PokeMyck.Models.Pokemon
+
+<h1>@Model.Name</h1>
+
+<img src="@Model.ImageUrl" alt="@Model.Name" />
+
+<p>Altura: @Model.Height</p>
+<p>Peso: @Model.Weight</p>
+
+<h2>Tipos</h2>
+<ul>
+    @foreach (var tipo in Model.Types)
+    {
+        <li>@tipo</li>
+    }
+</ul>
+
+<h2>Habilidades</h2>
+<ul>
+    @foreach (var habilidad in Model.Abilities)
+    {
+        <li>@habilidad</li>
+    }
+</ul>
+
+<a asp-action="PokemonList">Volver al listado</a>

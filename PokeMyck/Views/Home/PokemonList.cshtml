@@ -16,6 +16,12 @@
                  width="120" />
 
             <h3>@pokemon.Name</h3>
+
+            <a asp-controller="Home"
+               asp-action="PokemonDetails"
+               asp-route-nombre="@pokemon.Name">
+                Ver detalles
+            </a>
         </div>
     }
 </div>
