@@ -1,0 +1,16 @@
+﻿@model List<PokeMyck.Models.Pokemon>
+
+<h1>Pokémon obtenidos: @Model.Count</h1>
+
+<div>
+    @foreach (var pokemon in Model)
+    {
+        <div style="display: inline-block; margin: 15px; text-align: center;">
+            <img src="@pokemon.ImageUrl"
+                 alt="@pokemon.Name"
+                 width="120" />
+
+            <p>@pokemon.Name</p>
+        </div>
+    }
+</div>
