@@ -7,6 +7,51 @@
     — Total de Pokémon: @Model.TotalPokemones
 </p>
 
+<form asp-action="PokemonList" method="get" style="
+    display: flex;
+    flex-direction: row;
+align-items: center;
+">
+    <div style="
+    display: flex;
+    flex-direction: column;
+    margin-right: 1%;
+">
+        <label for="NombreBuscado">Buscar por nombre</label>
+        <input type="text"
+               id="NombreBuscado"
+               name="NombreBuscado"
+               value="@Model.NombreBuscado"
+               placeholder="Ej. squirtle" />
+    </div>
+
+    <div style="
+    display: flex;
+    flex-direction: column;
+    margin-right: 1%;
+">
+        <label for="EspecieSeleccionada" >Filtrar por especie</label>
+        <select id="EspecieSeleccionada" name="EspecieSeleccionada">
+    <option value="">Todas las especies</option>
+
+    @foreach (var especie in Model.Especies)
+    {
+        <option value="@especie.Name"
+                selected="@(Model.EspecieSeleccionada == especie.Name)">
+            @especie.Name
+        </option>
+    }
+</select>
+    </div>
+
+    <button type="submit" style="
+    height: fit-content;
+    margin-right: 1%;
+">Filtrar</button>
+
+    <a asp-action="PokemonList">Limpiar filtros</a>
+</form>
+
 <div>
     @foreach (var pokemon in Model.Pokemones)
     {
@@ -39,6 +84,7 @@
         </a>
     }
     <br />
+
     @for (int i = 1; i <= Model.TotalPaginas; i++)
     {
         if (i == Model.PaginaActual)
@@ -50,7 +96,9 @@
             if (i == 1 || i == Model.TotalPaginas || (i >= Model.PaginaActual - 5 && i <= Model.PaginaActual + 5))
             {
                 <a asp-action="PokemonList"
-                asp-route-pagina="@i">
+                   asp-route-pagina="@i"
+                   asp-route-NombreBuscado="@Model.NombreBuscado"
+                   asp-route-EspecieSeleccionada="@Model.EspecieSeleccionada">
                     @i
                 </a>
             } else if (i == Model.PaginaActual - 5 || i == Model.PaginaActual + 5)
